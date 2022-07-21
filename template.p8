@@ -54,7 +54,7 @@ function titledraw()
 	local starttxt = "press z to start"
 	rectfill(0,0,screenwidth, screenheight, 3)
 	print(titletxt, hcenter(titletxt), screenheight/4, 10)
-	print(starttxt, hcenter(starttxt), (screenheight/4)+(screenheight/2),7)			
+	print(starttxt, hcenter(starttxt), (screenheight/4)+(screenheight/2),7)
 end
 
 function gamedraw()
@@ -69,16 +69,14 @@ end
 
 -- handle button inputs
 function playercontrol()
-	if (btn(0)) then player.x-=1 end
-	if (btn(1)) then player.x+=1 end
-	if (btn(2)) then player.y-=1 end
-	if (btn(3)) then player.y+=1 end
+	if btn(0) then player.x-=1 end
+	if btn(1) then player.x+=1 end
+	if btn(2) then player.y-=1 end
+	if btn(3) then player.y+=1 end
 
 	-- check if the player is still onscreen
-	if (player.x <= 0) then player.x = 0 end
-	if (player.x >= screenwidth - player.width) then player.x = screenwidth - player.height end
-	if (player.y <= 0) then player.y = 0 end
-	if (player.y >= screenheight - player.height) then player.y = screenheight - player.height end
+	player.x = mid(0, player.x, screenwidth - player.width)
+	player.y = mid(0, player.y, screenheight - player.height)
 
 end
 
@@ -90,7 +88,7 @@ end
 -- library functions
 --- center align from: pico-8.wikia.com/wiki/centering_text
 function hcenter(s)
-	-- string length time			s the 
+	-- string length times the
 	-- pixels in a char's width
 	-- cut in half and rounded down
 	return (screenwidth / 2)-flr((#s*4)/2)
@@ -108,17 +106,19 @@ function iscolliding(obj1, obj2)
 	local y1 = obj1.y
 	local w1 = obj1.w
 	local h1 = obj1.h
-	
+
 	local x2 = obj2.x
 	local y2 = obj2.y
 	local w2 = obj2.w
 	local h2 = obj2.h
 
-	if(x1 < (x2 + w2)  and (x1 + w1)  > x2 and y1 < (y2 + h2) and (y1 + h1) > y2) then
-		return true
-	else
+	if x1 > (x2 + w2) or
+		x2 > (x1 + w1) or
+		y1 > (y2 + h2) or
+		y2 > (y1 + h1) then
 		return false
 	end
+	return true
 end
 __gfx__
 00000000888888880000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
